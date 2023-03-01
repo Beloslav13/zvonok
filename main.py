@@ -1,12 +1,9 @@
-from typing import TypeAlias, NamedTuple
+from dataclasses import dataclass
 
 
-# Hours: TypeAlias = int
-
-
-class Data(NamedTuple):
+@dataclass
+class Data:
     name: str
-    # hours: list[Hours]
     hours: list[int]
     sum_hours: int
 
@@ -17,36 +14,22 @@ def write_file(filename: str) -> list[tuple]:
         return data
 
 
-def get_statistic(data: list[tuple]) -> list[Data]:
-    list_data = []
-    prepare_data = _prepare_data(data)
-
-    # получилось длиннее из-за того что пришлось создавать еще объекты NamedTuple, предусмотрено для большой реализации
-    # удобства, понятно какой тип возвращается, какие у него поля, и для возможной валидации этих полей...
-    # в конечно итоге чтобы структура Data получилась чистой для след. взаимодействия: передачи куда либо, save и т.д.
-    for k, v in prepare_data.items():
-        sum_hours = v['sum_hours'] if v.get('sum_hours') else v['hours'][0]
-        hours = v['hours']
-        list_data.append(Data(name=k, hours=hours, sum_hours=sum_hours))
-
-    return list_data
-
-
-def _prepare_data(data: list[tuple]) -> dict:
-    prepare_data = {}
+def get_statistic(data: list[tuple]) -> dict:
+    result_data = {}
     for elem in data:
         name = elem[0]
         hours = int(elem[1])
-        if name in prepare_data:
-            prepare_data[name]['hours'].append(hours)
-            prepare_data[name]['sum_hours'] = sum(prepare_data[name]['hours'])
+        if name in result_data:
+            result_data[name].hours.append(hours)
+            result_data[name].sum_hours = sum(result_data[name].hours)
         else:
-            prepare_data[name] = {'hours': [hours]}
-    return prepare_data
+            result_data[name] = Data(name=name, hours=[hours], sum_hours=hours)
+
+    return result_data
 
 
-def print_data(result_data: list[Data]) -> None:
-    for data in result_data:
+def print_data(result_data: dict[Data]) -> None:
+    for name, data in result_data.items():
         hours = [str(h) for h in data.hours]
         print(f'{data.name}: {", ".join(hours)}, sum: {data.sum_hours}')
 
