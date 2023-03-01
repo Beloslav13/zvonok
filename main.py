@@ -8,7 +8,6 @@ def get_data(filename: str) -> dict:
                 data[name]['hours'].append(hours)
                 data[name]['sum_hours'] = sum(data[name]['hours'])
             else:
-                data[name] = name
                 data[name] = {'hours': [hours], 'sum_hours': hours}
 
     return data
