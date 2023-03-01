@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 
-@dataclass
+@dataclass(slots=True)
 class Data:
     name: str
     hours: list[int]
@@ -14,7 +14,7 @@ def write_file(filename: str) -> list[tuple]:
         return data
 
 
-def get_statistic(data: list[tuple]) -> dict:
+def get_statistic(data: list[tuple]) -> dict[Data]:
     result_data = {}
     for elem in data:
         name = elem[0]
